@@ -1,6 +1,5 @@
 import logging
 from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.utils import executor
 from dotenv import load_dotenv
 import os
@@ -17,9 +16,6 @@ logging.basicConfig(level=logging.INFO)
 # Создаем объект бота и диспетчера
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-
-# Регистрация middleware для логирования
-dp.middleware.setup(LoggingMiddleware())
 
 # Обработчик команды /start
 @dp.message_handler(commands=["start"])
