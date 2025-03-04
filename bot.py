@@ -2,7 +2,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.filters import Command
-from aiogram.types import ParseMode
+from aiogram.enums import ParseMode
 from aiogram import F
 from aiogram.utils import executor
 import os
