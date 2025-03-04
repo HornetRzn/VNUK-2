@@ -9,7 +9,8 @@ def load_token():
 
 TOKEN = load_token()  # Загружаем токен
 bot = Bot(token=TOKEN)  # Создаем объект бота
-dp = Dispatcher(bot)
+dp = Dispatcher()
+
 
 @dp.message_handler(commands=['start'])
 async def start(message: Message):
