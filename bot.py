@@ -1,55 +1,32 @@
 import logging
-import aiohttp
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command, Text
-from aiogram.fsm.context import FSMContext
-from config import TELEGRAM_BOT_TOKEN, DEEPINFRA_API_KEY
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
+from aiogram.filters import Command
+from aiogram.types import ParseMode
+from aiogram import F
+from aiogram.utils import executor
+import os
 
-# Настройка логирования
+# Получаем токен из переменных окружения
+API_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+# Устанавливаем базовый уровень логирования
 logging.basicConfig(level=logging.INFO)
 
-# Создание объекта бота и диспетчера
-bot = Bot(token=TELEGRAM_BOT_TOKEN)
+# Создаем экземпляры бота и диспетчера
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
-# Асинхронная функция для общения с AI
-async def chat_with_ai(user_message):
-    url = "https://api.deepinfra.com/v1/openai/chat/completions"
-    headers = {"Authorization": f"Bearer {DEEPINFRA_API_KEY}"}
-    payload = {
-        "model": "meta-llama/Llama-2-7b-chat-hf",
-        "messages": [{"role": "user", "content": user_message}]
-    }
+# Простой обработчик команды /start
+@dp.message_handler(Command("start"))
+async def cmd_start(message: Message):
+    await message.answer("Привет! Я твой бот. Чем могу помочь?")
 
-    try:
-        # Асинхронный запрос с использованием aiohttp
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as response:
-                # Проверка на успешный ответ
-                response.raise_for_status()
-                data = await response.json()
-                return data["choices"][0]["message"]["content"]
-    except aiohttp.ClientError as e:
-        logging.error(f"Ошибка при запросе к AI: {e}")
-        return "Извините, произошла ошибка при обращении к сервису."
+# Обработчик текстовых сообщений с использованием ключевого слова
+@dp.message_handler(F.text == "Привет")
+async def greet(message: Message):
+    await message.answer("Привет! Как дела?")
 
-# Обработчик для сообщений, которые являются реплаем на сообщения бота
-@dp.message(Text(contains=""))
-async def reply_handler(message: types.Message, state: FSMContext):
-    if message.reply_to_message and message.reply_to_message.from_user.id == bot.id:
-        user_text = message.text  # Получаем текст сообщения от пользователя
-        reply = await chat_with_ai(user_text)  # Получаем ответ от AI
-        await message.reply(reply, parse_mode="HTML")  # Отправляем ответ в чат
-
-# Обработчик для приветственного сообщения
-@dp.message(Command("start"))
-async def greet_user(message: types.Message):
-    await message.reply("Привет, как я могу помочь?")
-
-# Запуск бота
-async def main():
-    await dp.start_polling()
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+# Основная функция для запуска бота
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
