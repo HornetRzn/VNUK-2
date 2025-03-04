@@ -1,0 +1,4 @@
+import os
+
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+DEEPINFRA_API_KEY = os.getenv('DEEPINFRA_API_KEY')
