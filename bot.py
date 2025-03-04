@@ -1,7 +1,8 @@
 import logging
 import aiohttp
 from aiogram import Bot, Dispatcher, types
-from aiogram.utils import executor
+from aiogram.filters import Command, Text
+from aiogram.fsm.context import FSMContext
 from config import TELEGRAM_BOT_TOKEN, DEEPINFRA_API_KEY
 
 # Настройка логирования
@@ -33,17 +34,22 @@ async def chat_with_ai(user_message):
         return "Извините, произошла ошибка при обращении к сервису."
 
 # Обработчик для сообщений, которые являются реплаем на сообщения бота
-@dp.message(lambda message: message.reply_to_message and message.reply_to_message.from_user.id == bot.id)
-async def reply_handler(message: types.Message):
-    user_text = message.text  # Получаем текст сообщения от пользователя
-    reply = await chat_with_ai(user_text)  # Получаем ответ от AI
-    await message.reply(reply, parse_mode="HTML")  # Отправляем ответ в чат
+@dp.message(Text(contains=""))
+async def reply_handler(message: types.Message, state: FSMContext):
+    if message.reply_to_message and message.reply_to_message.from_user.id == bot.id:
+        user_text = message.text  # Получаем текст сообщения от пользователя
+        reply = await chat_with_ai(user_text)  # Получаем ответ от AI
+        await message.reply(reply, parse_mode="HTML")  # Отправляем ответ в чат
 
 # Обработчик для приветственного сообщения
-@dp.message(lambda message: "привет" in message.text.lower())
+@dp.message(Command("start"))
 async def greet_user(message: types.Message):
     await message.reply("Привет, как я могу помочь?")
 
 # Запуск бота
+async def main():
+    await dp.start_polling()
+
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    import asyncio
+    asyncio.run(main())
