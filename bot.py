@@ -1,3 +1,7 @@
+import os
+
+API_TOKEN = os.getenv("BOT_TOKEN")
+print("TOKEN:", API_TOKEN)  # Временный отладочный вывод
 import logging
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
