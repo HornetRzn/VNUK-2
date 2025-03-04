@@ -5,6 +5,8 @@ import os
 from aiogram import Bot, Dispatcher, types
 
 TOKEN = os.getenv("8124475955:AAGfEaT9CuzUhitVUKK6oIl3rE3HSWesw3E")  # Токен бота
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 API_KEY = os.getenv("NmtzgEazVU6yGONQVcGPByw5SbWWykkQ")  # API-ключ от DeepInfra
 
 # Функция общения с AI
