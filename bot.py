@@ -3,7 +3,11 @@ import os
 API_TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN:", API_TOKEN)  # Временный отладочный вывод
 import logging
-from aiogram import Bot, Dispatcher
+from aiogram import Bot
+
+API_TOKEN = "8124475955:AAGfEaT9CuzUhitVUKK6oIl3rE3HSWesw3E"  # Ваш токен здесь
+bot = Bot(token=API_TOKEN)
+
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.enums import ParseMode
