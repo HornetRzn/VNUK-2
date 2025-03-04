@@ -3,7 +3,6 @@ import aiohttp
 import asyncio
 import os
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import ParseMode
 
 # Получаем токен из переменных окружения
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")  # Токен бота
@@ -49,7 +48,7 @@ async def reply_handler(message: types.Message):
 # Приветственное сообщение
 @dp.message(lambda message: "привет" in message.text.lower())
 async def greet_user(message: types.Message):
-    await message.reply("Привет, псинка! Как теперь тебе?", parse_mode=ParseMode.MARKDOWN)
+    await message.reply("Привет, псинка! Как теперь тебе?", parse_mode="Markdown")  # Используем строку вместо ParseMode
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)  # Очистка старых вебхуков
