@@ -4,7 +4,6 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.enums import ParseMode
 from aiogram import F
-from aiogram.utils import executor
 import os
 
 # Получаем токен из переменных окружения
@@ -29,4 +28,10 @@ async def greet(message: Message):
 
 # Основная функция для запуска бота
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    import asyncio
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
